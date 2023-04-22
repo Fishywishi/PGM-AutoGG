@@ -2,6 +2,7 @@ package Fishywishi.PGMAutoGG;
 
 import org.apache.logging.log4j.Logger;
 
+import Fishywishi.PGMAutoGG.GuiConfig.PagConfig;
 import Fishywishi.PGMAutoGG.proxy.CommonProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -29,9 +30,10 @@ public class PGMAutoGG {
 
 	
 	@Mod.EventHandler
-	public static void preInit(FMLPreInitializationEvent event) {
+	public void preInit(FMLPreInitializationEvent event) {
 		logger = event.getModLog();
 		proxy.preInit(event);
+		PagConfig.preInit();
 	}
 	
 	@Mod.EventHandler
@@ -39,20 +41,28 @@ public class PGMAutoGG {
 		proxy.init(event);
 		FMLCommonHandler.instance().bus().register(this);
 		MinecraftForge.EVENT_BUS.register(this);
+		
+	
 	}
 	
 	@Mod.EventHandler
-	public static void postInit(FMLPostInitializationEvent event) {
+	public void postInit(FMLPostInitializationEvent event) {
 		proxy.postInit(event);
 	}
 	
-	
-	@SubscribeEvent
-	public void onChst(ClientChatReceivedEvent event) {
-			String message = event.message.getUnformattedText();
+		
+		@SubscribeEvent
+		public void onChst(ClientChatReceivedEvent event) {
+			if (PagConfig.Enabled == true) {
+				String message = event.message.getUnformattedText();
 			if(message.startsWith("Your stats:") && message.contains("Kills") && message.contains("K/D") && message.contains("Damage")) {
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("Pear is old");
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("gg");
+			}
+			
 			
 		}
+		
 	}
+	
+	
 }

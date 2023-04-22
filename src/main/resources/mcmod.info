@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
+  "modid": "pgmgg",
   "name": "PGM AutoGG",
   "description": "Automatically send GG at the end of PGM matches.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "version": "1.0.1",
+  "mcversion": "1.8.9",
   "url": "",
   "updateUrl": "",
   "authorList": ["Fishywishi"],
-  "credits": "The Forge and FML guys, for making this example",
+  "credits": "My cat Ramen because she is adorable",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
