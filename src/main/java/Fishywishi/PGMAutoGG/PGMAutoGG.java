@@ -1,7 +1,5 @@
 package Fishywishi.PGMAutoGG;
 
-import org.apache.logging.log4j.Logger;
-
 import Fishywishi.PGMAutoGG.GuiConfig.PagConfig;
 import Fishywishi.PGMAutoGG.proxy.CommonProxy;
 import net.minecraft.client.Minecraft;
@@ -17,52 +15,78 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
 @Mod(modid = Reference.MODID, name = Reference.Mod_NAME, version = Reference.Version, guiFactory = Reference.GUI_FACTORY)
-public class PGMAutoGG {
+public class PagConfig {
 	
+	 public static boolean Enabled;	
+	
+public static final String CATEGORY_NAME_GENERAL = "category_general";
 
-	@SidedProxy(serverSide = Reference.SERVER_PROXY_CLASS, clientSide = Reference.CLIENT_PROXY_CLASS)
-	public static CommonProxy proxy;
-	
-	public static Logger logger;
-	
-	@Mod.Instance("PGMAutoGG")
-	public static PGMAutoGG instance;
 
-	
-	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		logger = event.getModLog();
-		proxy.preInit(event);
-		PagConfig.preInit();
+
+public static void preInit() {
+	    File configFile = new File(Loader.instance().getConfigDir(), "PGMAutoGG.cfg");
+	    config = new Configuration(configFile);
+
+	    syncFromFile();
+	  }
+
+	public static void clientPreInit() {
+		MinecraftForge.EVENT_BUS.register(new ConfigEventHandler());
 	}
 	
-	@Mod.EventHandler
-	public void init(FMLInitializationEvent event) {
-		proxy.init(event);
-		FMLCommonHandler.instance().bus().register(this);
-		MinecraftForge.EVENT_BUS.register(this);
-		
-	
+	public static Configuration getConfig() {
+		return config;
 	}
 	
-	@Mod.EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		proxy.postInit(event);
+	public static void syncFromFile() {
+		syncConfig(true, true);
 	}
 	
-		
-		@SubscribeEvent
-		public void onChst(ClientChatReceivedEvent event) {
-			if (PagConfig.Enabled == true) {
-				String message = event.message.getUnformattedText();
-			if(message.startsWith("Your stats:") && message.contains("Kills") && message.contains("K/D") && message.contains("Damage")) {
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("gg");
-			}
-			
-			
+	public static void syncFromGUI() {
+		syncConfig(false, true);
+	}
+	
+	
+	
+	private static void syncConfig(boolean loadConfigFromFile, boolean readFieldsFromConfig) {
+		if (loadConfigFromFile) {
+			config.load();
 		}
 		
+		final boolean MY_BOOL_DEFAULT_VALUE = true;
+		Property propMyBool = config.get(CATEGORY_NAME_GENERAL, "Enabled", MY_BOOL_DEFAULT_VALUE);
+		propMyBool.comment = "Configuration boolean (Enabled)";
+		
+		
+		
+		List<String> propOrderGeneral = new ArrayList<String>();
+		propOrderGeneral.add(propMyBool.getName());
+		config.setCategoryPropertyOrder(CATEGORY_NAME_GENERAL, propOrderGeneral);
+		
+		Enabled = propMyBool.getBoolean(MY_BOOL_DEFAULT_VALUE);
+		
+		
+		
+		propMyBool.set(Enabled);
+		
+		if (config.hasChanged()) {
+			config.save();
+		}
+	}
+	
+	public static Configuration config = null;
+	
+	public static class ConfigEventHandler {
+		@SubscribeEvent(priority = EventPriority.LOWEST)
+		public void onEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
+			if (Reference.MODID.equals(event.modID)){
+					syncFromGUI();
+				}
+			
+		}
 	}
 	
 	
+
+
 }
