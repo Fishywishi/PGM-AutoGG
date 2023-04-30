@@ -18,6 +18,7 @@ import Fishywishi.PGMAutoGG.Reference;
 public class PagConfig {
 	
 	 public static boolean Enabled;	
+	 public static String Message = "gg";
 	
 public static final String CATEGORY_NAME_GENERAL = "category_general";
 
@@ -55,7 +56,11 @@ public static void preInit() {
 		
 		final boolean MY_BOOL_DEFAULT_VALUE = true;
 		Property propMyBool = config.get(CATEGORY_NAME_GENERAL, "Enabled", MY_BOOL_DEFAULT_VALUE);
-		propMyBool.comment = "Configuration boolean (Enabled)";
+		propMyBool.comment = "If Mod is enabled or disabled. (Enabled)";
+		
+		final String MY_STRING_DEFAULT_VALUE = "gg";
+		Property propMyString = config.get(CATEGORY_NAME_GENERAL, "Message", MY_STRING_DEFAULT_VALUE);
+		propMyString.comment = "Message Output. (gg)";
 		
 		
 		
@@ -64,6 +69,7 @@ public static void preInit() {
 		config.setCategoryPropertyOrder(CATEGORY_NAME_GENERAL, propOrderGeneral);
 		
 		Enabled = propMyBool.getBoolean(MY_BOOL_DEFAULT_VALUE);
+		Message = propMyString.getString();
 		
 		
 		

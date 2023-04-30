@@ -1,11 +1,13 @@
 package Fishywishi.PGMAutoGG.GuiConfig;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import Fishywishi.PGMAutoGG.Reference;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
@@ -45,6 +47,8 @@ public class GuiFactory implements IModGuiFactory
     
     
     public static class PagGuiConfig extends GuiConfig {
+    	
+    	
     	public PagGuiConfig(GuiScreen parentScreen) {
     		super(parentScreen, getConfigElements(), Reference.MODID, false, false, "Test");
     	}
@@ -80,20 +84,15 @@ public class GuiFactory implements IModGuiFactory
 			
     			}
     		
-    		
-    		@Override
-    		public void onGuiClosed() {
-    		    try {
-    		    	PagConfig.syncFromGUI();
-    		    } catch (Exception ignored) {
-    		    }
+				    		@Override
+				    		public void onGuiClosed() {
+				    			try{
+				    				PagConfig.syncFromGUI();
+				    		    } catch (Exception ignored) {}
+				    		}
     		}
-    		}
-    	
-    	
-    		
     	
     }
     
-    
+  
 }
